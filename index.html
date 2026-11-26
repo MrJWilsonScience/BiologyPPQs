@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Qualifications Scotland Biology Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* VOICE: calm, classroom-ready, big targets for pupils on phones and boards
+   IDEA: the periodic-table tile of the Chemistry Hub, recast for Biology: each course is a specimen tile
+   PICTURE: four large course tiles (N5, H, HHB, AH) as the main menu
+   COLOUR and TYPE: deep leaf-green field matching the question banks, white tiles, one amber accent; Atkinson Hyperlegible
+   LAYOUT: menu centred; a course opens full height under a slim bar with a course switcher */
+:root{color-scheme:light dark;
+  --bg:light-dark(#eef3ef,#0f1713);--ink:light-dark(#14261d,#e3eee7);--muted:light-dark(#5a6d62,#93a99b);
+  --field:light-dark(#1f6f4f,#123f2d);--tile:light-dark(#fff,#17231c);--line:light-dark(#d2ddd5,#2a3d32);
+  --accent:light-dark(#1f6f4f,#4fbd8c);--amber:#f2b33d}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Atkinson Hyperlegible",system-ui,sans-serif;overflow-x:clip}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+[hidden]{display:none!important}
+
+.menu{min-height:100%;display:flex;flex-direction:column}
+.hero{background:var(--field);color:#fff;padding:max(28px,env(safe-area-inset-top)) max(5vw,16px) 28px}
+.hero .in{max-width:1100px;margin:0 auto}
+h1{font-size:clamp(2rem,4.6vw,3.2rem);line-height:1.05;margin:0;text-wrap:balance}
+.hero p{margin:10px 0 0;max-width:60ch;opacity:.92}
+.days{display:inline-flex;align-items:center;gap:12px;margin-top:16px;background:var(--amber);color:#2a1d00;border-radius:14px;padding:8px 16px;font-weight:700;line-height:1.2}
+.days b{font-size:2rem;line-height:1}.days small{font-weight:400;font-size:.85rem}
+.grid{flex:1;max-width:1100px;width:100%;margin:0 auto;padding:clamp(20px,4vw,44px) max(5vw,16px) 24px;display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));align-content:start}
+.card{all:unset;box-sizing:border-box;cursor:pointer;background:var(--tile);border:1px solid var(--line);border-radius:14px;padding:22px;display:grid;gap:14px;justify-items:start;align-content:start;box-shadow:0 1px 0 var(--line),0 8px 24px -16px rgba(0,0,0,.35);transition:transform .15s,border-color .15s}
+.card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.card:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.card b{display:block;font-size:1.2rem;line-height:1.2}
+.card span{display:block;color:var(--muted);font-size:.95rem;margin-top:4px}
+.el{width:120px;aspect-ratio:1;border-radius:10px;background:var(--field);color:#fff;display:grid;grid-template-rows:auto 1fr auto;padding:8px 10px;font-weight:700;position:relative;overflow:hidden}
+.el::after{content:"";position:absolute;inset:auto 0 0 0;height:6px;background:var(--amber)}
+.el small{font-size:.75rem;opacity:.85}
+.el strong{font-size:2.6rem;line-height:1;align-self:center}
+.el strong.sm{font-size:2.1rem}
+.el em{font-style:normal;font-size:.7rem;opacity:.85;padding-bottom:6px}
+.foot{max-width:1100px;width:100%;margin:0 auto;padding:0 max(5vw,16px) max(36px,env(safe-area-inset-bottom));color:var(--muted);font-size:.88rem}
+
+.tool{position:fixed;inset:0;display:grid;grid-template-rows:auto 1fr auto;background:var(--bg)}
+.bar{background:var(--field);color:#fff;display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;padding:max(6px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) 6px max(10px,env(safe-area-inset-left))}
+.bar .home{background:none;border:0;cursor:pointer;color:#fff;font-weight:700;min-height:44px;padding:0 6px;display:flex;align-items:center;gap:6px}
+.bar .home svg{width:20px;height:20px}
+.seg{display:flex;gap:4px;flex-wrap:wrap}
+.seg button{border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff;border-radius:999px;padding:6px 14px;min-height:40px;cursor:pointer;font-size:.95rem}
+.seg button[aria-current=true]{background:var(--amber);color:#2a1d00;border-color:var(--amber);font-weight:700}
+#lvSel{display:none}
+.frames{position:relative}
+.frames iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#fff}
+.credit{margin:0;background:var(--field);color:rgba(255,255,255,.88);font-size:.8rem;line-height:1.3;text-align:center;padding:5px max(10px,env(safe-area-inset-right)) max(5px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left))}
+.load{position:absolute;inset:0;display:grid;place-items:center;align-content:center;gap:10px;color:var(--muted);text-align:center;padding:20px}
+.spin{width:36px;height:36px;border-radius:50%;border:4px solid var(--line);border-top-color:var(--accent);animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media(max-width:700px){
+  .bar{flex-wrap:nowrap;gap:6px}.bar .home span{display:none}
+  #lvSeg{display:none}
+  #lvSel{display:block;flex:1;appearance:none;-webkit-appearance:none;background:var(--amber) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%232a1d00' stroke-width='1.6'/%3E%3C/svg%3E") no-repeat right 10px center/10px 6px;color:#2a1d00;border:0;border-radius:999px;font-family:inherit;font-weight:700;font-size:.95rem;padding:0 28px 0 14px;min-height:40px;cursor:pointer}
+}
+@media(prefers-reduced-motion:reduce){.card{transition:none}.card:hover{transform:none}.spin{animation:none}}
+</style>
+</head>
+<body>
+<section class="menu" id="levels">
+  <div class="hero"><div class="in">
+    <h1>Qualifications Scotland Biology</h1>
+    <p>Choose your course to open its past paper question bank: questions by key area, marking instructions, mixed practice and your progress.</p>
+    <p class="days" id="days" role="timer"></p>
+  </div></div>
+  <div class="grid" id="lvGrid"></div>
+  <p class="foot">Choose a course to open it here. Your progress is saved in this browser, inside each question bank.<br>Compiled by Mr Wilson, Greenwood Academy. Questions and marking instructions © SQA/Qualifications Scotland, for non-commercial classroom use.</p>
+</section>
+
+<section class="tool" id="view" hidden>
+  <nav class="bar" aria-label="Course">
+    <button type="button" class="home" id="homeBtn" aria-label="All courses"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg><span>Courses</span></button>
+    <div class="seg" id="lvSeg" role="group" aria-label="Course"></div>
+    <select id="lvSel" aria-label="Course"></select>
+  </nav>
+  <div class="frames" id="frames"><div class="load" id="load"><div class="spin" aria-hidden="true"></div><span>Loading the question bank…<br><small>The first visit can take a few seconds.</small></span></div></div>
+  <p class="credit">Compiled by Mr Wilson, Greenwood Academy · Questions and marking instructions © SQA/Qualifications Scotland</p>
+</section>
+
+<script>
+{
+const LEVELS=[
+  {id:'n5',sym:'N5',num:5,short:'National 5',title:'National 5 Biology',src:'n5/index.html',exam:'Wed 12 May 2027 · 1:00 pm',desc:'Past paper questions 2014–2026 by key area and sub-topic'},
+  {id:'higher',sym:'H',num:6,short:'Higher',title:'Higher Biology',src:'higher/index.html',exam:'Wed 12 May 2027 · 9:00 am',desc:'Past paper questions by key area, with marking instructions'},
+  {id:'hhb',sym:'HHB',num:6,short:'Human Biology',title:'Higher Human Biology',src:'hhb/index.html',exam:'Wed 12 May 2027 · 9:00 am',desc:'Past paper questions by key area, plus hyperlinked PDF booklets'},
+  {id:'ah',sym:'AH',num:7,short:'Advanced Higher',title:'Advanced Higher Biology',src:'ah/index.html',exam:'Wed 12 May 2027 · 9:00 am',desc:'Past paper questions 2016–2026 by key area, with supplementary sheets'}
+];
+const $=id=>document.getElementById(id);
+const frames={};
+$('lvGrid').innerHTML=LEVELS.map(l=>`<button type="button" class="card" data-go="${l.id}"><div class="el" aria-hidden="true"><small>${l.num}</small><strong class="${l.sym.length>2?'sm':''}">${l.sym}</strong><em>SCQF ${l.num}</em></div><div><b>${l.title}</b><span>${l.desc}</span>${l.exam?`<span>Exam: ${l.exam}</span>`:''}</div></button>`).join('');
+$('lvSeg').innerHTML=LEVELS.map(l=>`<button type="button" data-go="${l.id}">${l.short}</button>`).join('');
+$('lvSel').innerHTML=LEVELS.map(l=>`<option value="${l.id}">${l.title}</option>`).join('');
+$('lvSel').onchange=e=>go(e.target.value);
+
+function go(h){if(location.hash.slice(1)===h)route();else location.hash=h}
+function route(){
+  const id=location.hash.slice(1),L=LEVELS.find(x=>x.id===id);
+  $('levels').hidden=!!L;$('view').hidden=!L;
+  document.body.style.overflow=L?'hidden':'';
+  if(!L){document.title='Qualifications Scotland Biology Hub';return}
+  document.title=L.title;
+  $('lvSeg').querySelectorAll('button').forEach(b=>b.setAttribute('aria-current',b.dataset.go===id));
+  $('lvSel').value=id;
+  for(const k in frames)frames[k].hidden=k!==id;
+  let f=frames[id];
+  if(!f){
+    $('load').hidden=false;
+    f=document.createElement('iframe');
+    f.title=L.title+' question bank';
+    f.allow='fullscreen; clipboard-write';
+    f.onload=()=>{if(!frames[id].hidden)$('load').hidden=true};
+    f.src=L.src;frames[id]=f;$('frames').appendChild(f);
+  }else $('load').hidden=true;
+}
+document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g)go(g.dataset.go)});
+$('homeBtn').onclick=()=>go('');
+addEventListener('hashchange',route);
+route();
+
+const at=Date.parse('2027-05-12T09:00:00+01:00'),atN5=Date.parse('2027-05-12T13:00:00+01:00');
+const dd=t=>Math.floor((t-Date.now())/86400000),dl=n=>n>0?`${n} day${n===1?'':'s'}`:(n===0?'today':'done');
+function tick(){const d=dd(at);$('days').innerHTML=d>0?`<b>${d}</b><span>day${d===1?'':'s'} until the Biology exams<br><small>Higher, Human Biology &amp; Advanced Higher: Wed 12 May 2027, 9:00 am (${dl(d)})<br>National 5: Wed 12 May 2027, 1:00 pm (${dl(dd(atN5))})</small></span>`:'Good luck in your Biology exams!'}
+tick();setInterval(tick,3600000);
+}
+</script>
+</body>
+</html>

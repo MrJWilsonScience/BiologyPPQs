@@ -1,0 +1,604 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}.qtext{background:var(--paper,#fff);color:#111;border:1px solid var(--line);border-radius:4px;padding:14px 16px;line-height:1.55;font-size:1.05rem}
+.qtext p{margin:.5em 0}.qtext .p1{margin-left:1.2em}.qtext .p2{margin-left:2.4em}.qtext .opt{margin:.25em 0 .25em 1.2em}.qtext .mk{font-size:.8em;opacity:.7;white-space:nowrap}
+.qtools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0 0;font-size:.85rem;color:var(--muted)}
+.qtools button{font:inherit;min-height:36px;padding:4px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);cursor:pointer}
+.mst{border-collapse:collapse;width:100%;font-size:.92rem;background:var(--paper,#fff);color:#111}
+.mst th,.mst td{border:1px solid #999;padding:6px 8px;vertical-align:top;text-align:left}
+.mst th{background:#e6e6e6}.mst p{margin:.25em 0}.mst .mtk{font-weight:700}.mst .mk{font-weight:700;float:right;margin-left:8px}
+.mstw{overflow-x:auto}
+</style></head><body>
+<title>AH Biology Question Bank</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: one column workspace; topics laid out like element tiles grouped by unit, question view is a single "paper sheet" */
+:root{
+  --bg:#eef2f3; --surface:#ffffff; --ink:#14232b; --muted:#5b6b73; --line:#d3dde0;
+  --accent:#0f6e74; --accent-ink:#ffffff; --tile:#e1ecee; --mark:#8a3b12; --mark-bg:#fbf0e8;
+  --f-body:"Atkinson Hyperlegible",system-ui,sans-serif; --f-mono:"JetBrains Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1719; --surface:#172225; --ink:#e3ecee; --muted:#93a5ab; --line:#2a3a3e;
+  --accent:#4fb8bd; --accent-ink:#06282a; --tile:#1d2c30; --mark:#f0a77c; --mark-bg:#2b1f18; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1719; --surface:#172225; --ink:#e3ecee; --muted:#93a5ab; --line:#2a3a3e;
+  --accent:#4fb8bd; --accent-ink:#06282a; --tile:#1d2c30; --mark:#f0a77c; --mark-bg:#2b1f18; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font:16px/1.5 var(--f-body)}
+.wrap{max-width:60rem;margin:0 auto;padding-block:20px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.top{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 16px;margin-bottom:20px}
+h1{font-size:1.6rem;margin:0;text-wrap:balance}
+.sub{color:var(--muted);font-size:.9rem}
+.eyebrow{font:700 .72rem var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.unit{margin-top:22px}
+.ka{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px 14px;margin-bottom:10px}
+.ka h3{margin:0 0 8px;font-size:1rem}.ka h3 .sym{font-size:.95rem;margin-right:8px}
+.sbs{display:flex;flex-wrap:wrap;gap:8px}.sbb{font:700 .85rem var(--f-body);padding:7px 11px;border-radius:5px;border:1px solid var(--line);background:var(--tile);color:var(--ink);cursor:pointer;text-align:left}
+.sbb:hover{border-color:var(--accent)}.sbb .cnt{margin-left:6px}
+#tabT[aria-selected="true"],#tabS[aria-selected="true"]{background:var(--accent);color:var(--accent-ink)}
+.unit h2{font-size:.8rem;margin:0 0 10px;font-family:var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.tile{all:unset;box-sizing:border-box;cursor:pointer;background:var(--tile);border:1px solid var(--line);border-radius:6px;padding:10px 12px;display:grid;grid-template-rows:1fr auto;min-height:88px}
+.tile:hover{border-color:var(--accent)}
+.tile:focus-visible,button:focus-visible,select:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.sym{font:700 1.5rem var(--f-mono);color:var(--accent)}
+.tname{font-weight:700;line-height:1.25;font-size:.95rem}
+.cnt{font:500 .72rem var(--f-mono);color:var(--muted)}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+button.b{font:700 .9rem var(--f-body);border-radius:6px;padding:9px 14px;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+a.b{display:inline-block;text-decoration:none;font:700 .9rem var(--f-body);border-radius:6px;padding:9px 14px;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+a.b:hover{border-color:var(--accent)}
+button.b.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+button.b:disabled{opacity:.45;cursor:default}
+select{font:inherit;padding:8px;border-radius:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink);max-width:100%}
+.meta{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;margin:14px 0 10px}
+.meta .paper{font-size:1.25rem;font-weight:700}
+.chip{font:700 .75rem var(--f-mono);padding:3px 8px;border-radius:4px;background:var(--tile);border:1px solid var(--line)}
+.sheet{background:var(--paper,#fff);border:1px solid var(--line);border-radius:4px;padding:14px;overflow-x:auto}
+.sheet img{display:block;max-width:100%;height:auto;margin:0 auto}
+.ans{background:var(--mark-bg);border:1px solid var(--line);border-radius:4px;padding:16px;margin-top:12px}
+.ans .lbl{font:700 .75rem var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--mark)}
+.big{font:700 2.4rem var(--f-mono);color:var(--mark)}
+.ans ul{margin:6px 0 0;padding-left:1.2rem}
+.ans h4{margin:12px 0 2px}
+.note{color:var(--muted);font-size:.8rem;margin-top:10px}
+.foot{color:var(--muted);font-size:.75rem;margin-top:28px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}.sg{font:700 .85rem var(--f-body);padding:8px 12px;border:0;background:var(--surface);color:var(--ink);cursor:pointer}.sg+.sg{border-left:1px solid var(--line)}.sg.on{background:var(--accent);color:var(--accent-ink)}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:14px}
+.col{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px;min-width:0}
+.col h2{margin:0;font-size:1.1rem}.colhead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
+.yr{display:grid;grid-template-columns:3.4rem 1fr;gap:6px;padding:6px 0;border-top:1px solid var(--line);align-items:start}
+.yr b{font:700 .85rem var(--f-mono);padding-top:5px}.qs{display:flex;flex-wrap:wrap;gap:6px}
+.qb{font:700 .8rem var(--f-mono);padding:5px 9px;border-radius:4px;border:1px solid var(--line);background:var(--tile);color:var(--ink);cursor:pointer;text-align:left}
+.qb:hover{border-color:var(--accent)}
+.row{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;align-items:center}
+:root{--good:#1f7a3a;--good-bg:#e3f3e8;--part:#9a6a00;--part-bg:#fbf1d6;--bad:#a8322b;--bad-bg:#f9e3e1}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--good:#6fd08d;--good-bg:#173323;--part:#e8c15a;--part-bg:#33290f;--bad:#f08a82;--bad-bg:#3a1c1a}}
+:root[data-theme="dark"]{--good:#6fd08d;--good-bg:#173323;--part:#e8c15a;--part-bg:#33290f;--bad:#f08a82;--bad-bg:#3a1c1a}
+.qb.got{background:var(--good-bg);border-color:var(--good);color:var(--good)}
+.qb.part{background:var(--part-bg);border-color:var(--part);color:var(--part)}
+.qb.not{background:var(--bad-bg);border-color:var(--bad);color:var(--bad)}
+.qb.sel{outline:3px solid currentColor;outline-offset:1px}#colF .qb:not(.sel){opacity:.7}
+.qb.inset{outline:2px dashed var(--accent);outline-offset:1px}
+.prog{height:5px;border-radius:3px;background:var(--line);overflow:hidden;margin-top:6px;display:flex}
+.prog i{display:block;height:100%}.prog .g{background:var(--good)}.prog .p{background:var(--part)}.prog .n{background:var(--bad)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px;margin-top:14px}
+.panel h2{margin:0 0 8px;font-size:1.1rem}
+.filters{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;font-size:.9rem}
+.filters label{display:inline-flex;gap:6px;align-items:center;cursor:pointer}
+.timer{font:700 1.1rem var(--f-mono);font-variant-numeric:tabular-nums}
+.timer.over{color:var(--bad)}
+.mcopts{display:flex;gap:8px;flex-wrap:wrap}
+.mcopts button{font:700 1.2rem var(--f-mono);width:3.2rem;height:3rem;border-radius:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.mcopts button.right{background:var(--good-bg);border-color:var(--good);color:var(--good)}
+.mcopts button.wrong{background:var(--bad-bg);border-color:var(--bad);color:var(--bad)}
+.rate button.b.got{border-color:var(--good);color:var(--good)}.rate button.b.part{border-color:var(--part);color:var(--part)}.rate button.b.not{border-color:var(--bad);color:var(--bad)}
+.rate button.b.sel{outline:3px solid currentColor}
+.tlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:6px}
+table.t{border-collapse:collapse;font-size:.85rem;font-variant-numeric:tabular-nums;width:100%}
+table.t th,table.t td{border:1px solid var(--line);padding:4px 7px;text-align:left}
+table.t th{background:var(--tile)}
+.scroll{overflow-x:auto}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(560px,100%);background:var(--surface);border-left:1px solid var(--line);z-index:20;overflow-y:auto;padding:16px;padding-top:calc(16px + env(safe-area-inset-top,0px));padding-right:max(16px,env(safe-area-inset-right,0px));box-shadow:-8px 0 30px rgba(0,0,0,.18)}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.msg{font-size:.85rem;color:var(--muted)}
+input[type=text],textarea{font:inherit;padding:8px;border-radius:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink);max-width:100%}
+.banner{background:var(--tile);border:1px solid var(--line);border-radius:6px;padding:10px 12px;margin-bottom:14px}
+.score{font:700 2rem var(--f-mono)}
+@media print{.noprint{display:none!important}.pq{break-inside:avoid;margin-bottom:14px}body{background:#fff;color:#000}}
+.countdown{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:6px 14px;background:var(--accent);color:var(--accent-ink);border-radius:6px;padding:10px 14px;margin-bottom:16px}
+.cdl{font-weight:700}.cdt{display:flex;gap:10px;font:700 1rem var(--f-mono);font-variant-numeric:tabular-nums}.cdt span{display:inline-flex;flex-direction:column;align-items:center;line-height:1.1}.cdt small{font:500 .62rem var(--f-mono);letter-spacing:.06em;text-transform:uppercase;opacity:.85}
+@media print{.countdown{display:none}}
+.sheet img{mix-blend-mode:multiply}body.dim .sheet{filter:brightness(.82)}
+.colwrap{position:fixed;top:calc(10px + env(safe-area-inset-top,0px));right:max(10px,env(safe-area-inset-right,0px));z-index:30;display:flex;flex-direction:column;align-items:flex-end}
+#colBtn{display:inline-flex;align-items:center;gap:6px;border-radius:999px;box-shadow:0 4px 14px -6px rgba(0,0,0,.35)}
+.dotc{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--line);background:#fff;display:inline-block}
+.pop{width:min(340px,calc(100vw - 20px));background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:14px;box-shadow:0 18px 40px -18px rgba(0,0,0,.5);margin-top:6px}
+.pop h3{margin:0 0 4px;font-size:1rem}.pop p{margin:0 0 10px;font-size:.85rem;color:var(--muted)}
+.sw{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.sw button{display:flex;align-items:center;gap:8px;min-height:42px;padding:4px 10px 4px 6px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font:inherit;font-size:.92rem}
+.sw button i{width:28px;height:28px;border-radius:50%;background:var(--c);border:1px solid rgba(0,0,0,.25);flex:none}
+.sw button[aria-pressed=true]{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent) inset;font-weight:700}
+.tg{display:flex;align-items:center;gap:8px;min-height:44px;margin-top:6px;cursor:pointer}.tg input{width:20px;height:20px;accent-color:var(--accent)}
+.countdown{margin-right:110px}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<div class="colwrap noprint"><button type="button" class="b" id="colBtn" aria-expanded="false" aria-controls="colPop" title="Question paper colour"><i class="dotc" aria-hidden="true"></i> Colour</button>
+  <div class="pop" id="colPop" hidden role="dialog" aria-label="Question paper colour">
+    <h3>Question paper colour</h3>
+    <p>The Qualifications Scotland standard colours for adapted question papers. Applies to questions and marking instructions. Shades on screen are close matches, not exact.</p>
+    <div class="sw" id="colSw"></div>
+    <label class="tg"><input type="checkbox" id="colDim"> Dim bright question sheets</label>
+  </div></div>
+<div class="wrap">
+  <div class="countdown" id="cd" aria-live="off"><span class="cdl">Advanced Higher Biology exam · Wednesday 12 May 2027, 9:00 am</span><span class="cdt" id="cdt"></span></div>
+  
+  <!-- HOME -->
+  <div id="home">
+    <header class="top">
+      <div><div class="eyebrow">SQA / Qualifications Scotland Advanced Higher Biology · 2016–2026</div><h1>Advanced Higher Biology question bank</h1></div>
+      <div class="bar noprint"><button class="b" id="teachBtn" hidden>Teacher tools</button></div>
+    </header>
+    <div id="setBanner" class="banner" hidden></div>
+    <div class="panel">
+      <h2>Practice settings</h2>
+      <div class="filters" id="filters">
+        <label><input type="radio" name="course" value="all" id="cAll"> All papers 2016–2026</label>
+        <label><input type="radio" name="course" value="cur" id="cCur"> Current course only (2020 onwards)</label>
+        <label><input type="checkbox" id="hideGot"> Hide questions I got right</label>
+      </div>
+
+      <div class="bar" style="margin-top:10px"><button class="b pri" id="mixBtn">Mixed practice across topics</button></div>
+    </div>
+    <div class="panel">
+      <h2>Quiz of 10 on topics we've covered</h2>
+      <p class="msg">Tick the sub-topics you've covered in class. Quizzes of 10 then only use multiple choice questions from those sub-topics.</p>
+      <label class="filters"><input type="checkbox" id="covOnly"> Only use covered topics in every Quiz of 10</label>
+      <details id="covBox" style="margin-top:8px"><summary><strong>Choose covered topics</strong> <span class="cnt" id="covCnt"></span></summary>
+        <div class="bar" style="margin:8px 0"><button class="b" id="covAll">Tick all</button><button class="b" id="covNone">Clear</button></div>
+        <div id="covList"></div>
+      </details>
+      <div class="bar" style="margin-top:10px"><button class="b pri" id="covQuiz">Start quiz of 10</button><span class="msg" id="covMsg"></span></div>
+    </div>
+    <div class="bar" style="margin-top:18px"><div class="seg" role="tablist"><button class="sg" id="tabT" role="tab">Key Areas</button><button class="sg" id="tabS" role="tab">Sub-topics</button></div></div>
+    <div id="units"></div>
+    <div id="subs" hidden></div>
+    <div class="panel">
+      <h2>Move your progress to another device</h2>
+      <p class="msg">Make a code on this device, then enter it on the other device. Copy it somewhere you can reach from both, such as an email or a Teams message to yourself.</p>
+      <div class="bar"><button class="b" id="mkCode">Make my code</button><button class="b" id="cpCode" hidden>Copy code</button><span class="msg" id="codeMsg"></span></div>
+      <textarea id="myCode" rows="3" readonly hidden style="width:100%;margin-top:8px;font-family:var(--f-mono);font-size:.8rem;word-break:break-all" aria-label="Your progress code"></textarea>
+      <label for="inCode" class="msg" style="display:block;margin-top:10px">Enter a code from another device:</label>
+      <textarea id="inCode" rows="3" style="width:100%;margin-top:4px;font-family:var(--f-mono);font-size:.8rem" placeholder="AB1-…"></textarea>
+      <div class="bar" style="margin-top:6px"><button class="b pri" id="ldCode">Load progress</button><span class="msg" id="ldMsg"></span></div>
+      <h2 style="margin-top:16px">Reset progress</h2>
+      <p class="msg">Clears every Got it / Partly / Not yet rating on this device. Make a code first if you might want them back.</p>
+      <div class="bar"><button class="b" id="rsBtn">Reset my progress</button><span id="rsConfirm" hidden><span class="msg">Are you sure?</span> <button class="b not" id="rsYes" style="border-color:var(--bad);color:var(--bad)">Yes, reset</button> <button class="b" id="rsNo">Cancel</button></span><span class="msg" id="rsMsg"></span></div>
+    </div>
+    <p class="foot">Questions and marking instructions © SQA/Qualifications Scotland, for non-commercial classroom use. Compiled by Mr Wilson, Greenwood Academy with Claude (Anthropic AI); Key Area placements are by Claude, not SQA. 2016–2019 papers are from the previous Advanced Higher course; the undated paper is listed as 2020. A Section 2 question can appear under more than one Key Area. Your progress is saved in this browser.</p>
+  </div>
+
+  <!-- TOPIC MENU -->
+  <div id="menu" hidden>
+    <div class="row"><button class="b" id="mback">← Topics</button></div>
+    <h1 id="mtitle" style="margin-top:14px"></h1>
+    <p class="msg" id="mfilter"></p>
+    <div class="cols"><section class="col" id="colmc"></section><section class="col" id="cols2"></section></div>
+  </div>
+
+  <!-- MIXED SETUP -->
+  <div id="mix" hidden>
+    <div class="row"><button class="b" id="xback">← Topics</button></div>
+    <h1 style="margin-top:14px">Mixed practice</h1>
+    <div class="panel">
+      <div class="bar" style="margin-bottom:8px"><button class="b" id="xall">Select all</button><button class="b" id="xnone">Clear</button>
+        <span class="sub">Or pick a unit:</span><span id="xunits" class="bar"></span></div>
+      <div class="tlist" id="xtopics"></div>
+    </div>
+    <div class="panel">
+      <div class="filters">
+        <label><input type="radio" name="xkind" value="all" checked> Both types</label>
+        <label><input type="radio" name="xkind" value="Multiple choice"> Multiple choice</label>
+        <label><input type="radio" name="xkind" value="Section 2"> Section 2</label>
+        <label>Number of questions <select id="xn"><option>5</option><option selected>10</option><option>20</option><option>30</option></select></label>
+      </div>
+      <div class="bar" style="margin-top:10px"><button class="b pri" id="xstart">Start</button><span class="msg" id="xmsg"></span></div>
+    </div>
+  </div>
+
+  <!-- QUESTION -->
+  <div id="quiz" hidden>
+    <div class="row noprint">
+      <div class="bar"><button class="b" id="back">← Back</button><button class="b" id="home2">Topics</button></div>
+      
+    </div>
+    <div class="meta">
+      <span class="eyebrow" id="tname"></span>
+      <span class="paper" id="paper"></span>
+      <span class="chip" id="qnum"></span>
+      <span class="chip" id="kind"></span>
+      <span class="chip" id="pos"></span>
+    </div>
+    <div class="row panel noprint" style="margin-top:0;padding:10px 14px">
+      <div class="bar"><span class="sub" id="tsug"></span></div>
+      <div class="bar"><span class="timer" id="tclock">0:00</span><button class="b" id="tgo">Start timer</button><button class="b" id="treset">Reset</button></div>
+    </div>
+    <div class="sheet" id="qbox" style="margin-top:10px"></div>
+    <div id="mcbox" class="panel noprint" hidden><div class="sub">Choose your answer:</div><div class="mcopts" id="mcopts" style="margin-top:6px"></div><div id="mcres" class="msg" style="margin-top:6px"></div></div>
+    <div id="abox" hidden></div>
+    <div id="ratebox" class="panel rate noprint" hidden>
+      <div class="sub">How did you do?</div>
+      <div class="bar" style="margin-top:6px"><button class="b got" data-r="got">Got it</button><button class="b part" data-r="part">Partly</button><button class="b not" data-r="not">Not yet</button></div>
+    </div>
+    <div class="row noprint" style="margin-top:14px">
+      <button class="b pri" id="toggle">Show marking instructions</button>
+      <div class="bar"><button class="b" id="prev">Previous</button><button class="b" id="rand">Random</button><button class="b" id="next">Next</button></div>
+    </div>
+    <div class="bar noprint" style="margin-top:14px">
+      <button class="b" id="addSet" hidden>Add to set</button>
+      <a class="b" id="repLink" href="https://forms.cloud.microsoft/e/6s21bbcSFP" target="_blank" rel="noopener">Report a problem</a>
+      <button class="b" id="repCopy">Copy question code</button>
+      <span class="msg" id="repInfo"></span>
+    </div>
+  </div>
+
+  <!-- SUMMARY -->
+  <div id="summary" hidden>
+    <h1>Quiz finished</h1>
+    <div class="panel"><div class="score" id="sscore"></div><div id="slist" class="msg"></div>
+    <div class="bar" style="margin-top:10px"><button class="b pri" id="sagain">Try another 10</button><button class="b" id="shome">Topics</button></div></div>
+  </div>
+
+  <!-- TEACHER -->
+  <div id="teach" hidden>
+    <div class="row"><button class="b" id="tback">← Topics</button></div>
+    <h1 style="margin-top:14px">Teacher tools</h1>
+    <div class="panel">
+      <h2>Question set</h2>
+      <p class="msg">Turn on set building, then use “Add to set” on any question. Share the link with pupils, or download the set as a PDF.</p>
+      <label class="filters"><input type="checkbox" id="setMode"> Show “Add to set” on questions</label>
+      <div id="setList" class="msg" style="margin-top:8px"></div>
+      <div class="bar" style="margin-top:8px">
+        <input type="text" id="setLink" readonly style="flex:1;min-width:0" aria-label="Set link">
+        <button class="b" id="copyLink">Copy link</button>
+        <button class="b" id="pdfQ">PDF questions</button>
+        <button class="b" id="pdfQA">PDF with answers</button>
+        <button class="b" id="clearSet">Clear set</button>
+      </div>
+      <div class="msg" id="setMsg"></div>
+    </div>
+    <div class="panel">
+      <h2>Problem reports</h2>
+      <p class="msg">Pupils report problems through the Microsoft Form. Check the responses in Microsoft Forms.</p>
+    </div>
+  </div>
+</div>
+
+<div id="printArea" hidden></div>
+
+<script>
+function YR(y){return +y===2027?'Specimen QP':y}
+
+const SITE='https://claude.ai/artifact/2rdSnvAWxPv2AErpLfufM6';
+const SYM={C1:'Lt',C2:'Pr',C3:'Mp',C4:'Cm',C5:'Cd',O1:'Ft',O2:'Ev',O3:'Vs',O4:'Sb',O5:'Pa',I1:'Sp',I2:'Ex',I3:'Ce'};
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let INDEX=[],TOPICS={},seq=[],pos=0,cur=null,back='home',quizMode=null,quizScore=[],teacher=false;
+let DB=null,USER=null,UID=null;
+// ---------- local state
+let S={r:{},paper:'white',dim:false,cov:[],covOnly:false,tab:'topics',course:'all',hideGot:false,name:'',set:[],setMode:false};
+try{Object.assign(S,JSON.parse(localStorage.getItem('ahbqb')||'{}'))}catch(e){}
+function save(){try{localStorage.setItem('ahbqb',JSON.stringify(S))}catch(e){}}
+const qid=(slug,q)=>slug+'|'+q.year+'|'+q.kind[0]+'|'+q.label;
+// ---------- data
+const BUNDLE_OF={"c1": "all", "c2": "all", "c3": "all", "c4": "all", "c5": "all", "i1": "all", "i2": "all", "i3": "all", "o1": "all", "o2": "all", "o3": "all", "o4": "all", "o5": "all"},BUNDLES={};
+async function loadBundled(slug){const b=BUNDLE_OF[slug];if(!b)return (await fetch('data/'+slug+'.json')).json();BUNDLES[b]=BUNDLES[b]||fetch('data/'+b+'.json').then(r=>r.json());return (await BUNDLES[b])[slug];}
+async function loadTopic(slug){
+  if(TOPICS[slug]) return TOPICS[slug];
+  const el=document.getElementById('d-'+slug);
+  const data=el?JSON.parse(el.textContent):await loadBundled(slug);
+  TOPICS[slug]=data; return data;
+}
+function passes(slug,q){
+  if(S.course==='cur'&&q.year<2020) return false;
+  if(S.hideGot&&S.r[qid(slug,q)]==='got') return false;
+  return true;
+}
+function weight(slug,q){const r=S.r[qid(slug,q)];return r==='got'?0.4:r==='part'?2:r==='not'?3:3}
+function pickWeighted(list){const w=list.map(x=>weight(x.slug,TOPICS[x.slug][x.n]));let t=w.reduce((a,b)=>a+b,0),r=Math.random()*t;for(let k=0;k<list.length;k++){r-=w[k];if(r<=0)return k}return list.length-1}
+function sample(list,n){const L=list.slice(),out=[];while(L.length&&out.length<n){out.push(L.splice(pickWeighted(L),1)[0])}return out}
+// ---------- views
+function view(v){['home','menu','mix','quiz','summary','teach'].forEach(x=>$(x).hidden=x!==v);window.scrollTo(0,0);stopTimer()}
+function renderHome(){
+  const units={};INDEX.forEach(t=>(units[t.unit]=units[t.unit]||[]).push(t));
+  $('units').innerHTML=Object.entries(units).map(([u,ts])=>`<section class="unit"><h2>${esc(u)}</h2><div class="tiles">${ts.map(t=>{
+    const c={got:0,part:0,not:0};Object.entries(S.r).forEach(([k,v])=>{if(k.startsWith(t.slug+'|'))c[v]++});
+    const done=c.got+c.part+c.not,pc=x=>(100*x/t.count).toFixed(1)+'%';
+    return `<button class="tile" data-slug="${t.slug}"><span class="tname">${esc(t.name)}</span><span><span class="cnt">${done} of ${t.count} done</span><span class="prog"><i class="g" style="width:${pc(c.got)}"></i><i class="p" style="width:${pc(c.part)}"></i><i class="n" style="width:${pc(c.not)}"></i></span></span></button>`}).join('')}</div></section>`).join('');
+  document.querySelectorAll('.tile').forEach(b=>b.onclick=()=>openTopic(b.dataset.slug));
+  const byU={};INDEX.forEach(t=>(byU[t.unit]=byU[t.unit]||[]).push(t));
+  $('subs').innerHTML=Object.entries(byU).map(([u,ts])=>`<section class="unit"><h2>${esc(u)}</h2>${ts.map(t=>`<div class="ka"><h3>${esc(t.name)}</h3><div class="sbs">${(t.subs||[]).map((sb,i)=>{const d=sb.k.filter(k=>S.r[t.slug+'|'+k]).length;return `<button class="sbb" data-slug="${t.slug}" data-sub="${i}">${esc(sb.name)}<span class="cnt">${d}/${sb.n.length}</span></button>`}).join('')}</div></div>`).join('')}</section>`).join('');
+  document.querySelectorAll('.sbb').forEach(b=>b.onclick=()=>openTopic(b.dataset.slug,+b.dataset.sub));
+  const sv=S.tab==='subs';$('units').hidden=sv;$('subs').hidden=!sv;$('tabT').setAttribute('aria-selected',!sv);$('tabS').setAttribute('aria-selected',sv);
+  $('cAll').checked=S.course==='all';$('cCur').checked=S.course==='cur';$('hideGot').checked=S.hideGot;
+}
+async function openTopic(slug,sub){
+  const t=INDEX.find(x=>x.slug===slug);let A;const SB=(sub!=null&&t.subs)?t.subs[sub]:null;const inS=n=>!SB||SB.n.includes(n);
+  try{A=await loadTopic(slug)}catch(e){$('units').insertAdjacentHTML('afterbegin','<p>Could not load this topic. Try again.</p>');return}
+  $('mtitle').textContent=SB?t.name+': '+SB.name:t.name;
+  $('mfilter').textContent=(S.course==='cur'?'Showing the current course (2020 onwards). ':'Showing all papers. ')+(S.hideGot?'Questions you got right are hidden. ':'')+'Colours show how you rated each question.';
+  const col=(k)=>{const L=A.map((q,n)=>({slug,n,q})).filter(x=>x.q.kind===k&&inS(x.n)&&passes(slug,x.q));
+    const title=k;
+    if(!L.length) return `<div class="colhead"><h2>${title}</h2></div><p class="sub">No ${title.toLowerCase()} questions to show.</p>`;
+    const yrs={};L.forEach(x=>(yrs[x.q.year]=yrs[x.q.year]||[]).push(x));
+    const quiz=k==='Multiple choice'?`<button class="b" data-quiz="1">Quiz of 10</button>`:'';
+    return `<div class="colhead"><h2>${title} <span class="cnt">${L.length}</span></h2><div class="bar">${quiz}<button class="b pri" data-rand="${k}">Random</button></div></div>`+
+      Object.entries(yrs).map(([y,a])=>`<div class="yr"><b>${YR(y)}</b><div class="qs">${a.map(x=>`<button class="qb ${S.r[qid(slug,x.q)]||''} ${inSet(slug,x.n)?'inset':''}" data-n="${x.n}">${esc(x.q.label.replace('Question ','Q'))}</button>`).join('')}</div></div>`).join('');};
+  $('colmc').innerHTML=col('Multiple choice');$('cols2').innerHTML=col('Section 2');
+  const listFor=k=>A.map((q,n)=>({slug,n})).filter(x=>A[x.n].kind===k&&inS(x.n)&&passes(slug,A[x.n]));
+  document.querySelectorAll('#menu .qb').forEach(b=>b.onclick=()=>{const k=A[+b.dataset.n].kind;const L=listFor(k);startSeq(L,L.findIndex(x=>x.n===+b.dataset.n),'menu',null,t.slug)});
+  document.querySelectorAll('#menu [data-rand]').forEach(b=>b.onclick=()=>{const L=listFor(b.dataset.rand);startSeq(L,pickWeighted(L),'menu',null,t.slug)});
+  document.querySelectorAll('#menu [data-quiz]').forEach(b=>b.onclick=()=>{let P=listFor('Multiple choice');if(S.covOnly){const ok=coveredIdx(t);P=P.filter(x=>ok.has(x.n))}if(!P.length){b.textContent='No covered questions';return}const L=sample(P,10);startSeq(L,0,'menu','quiz',t.slug)});
+  menuSlug=slug;menuSub=sub;view('menu');
+}
+let menuSlug=null,menuSub=null;
+function startSeq(L,i,from,mode,slug){if(!L.length)return;seq=L;pos=Math.max(0,i);back=from;quizMode=mode;quizScore=[];view('quiz');show()}
+// ---------- timer
+let tStart=null,tAcc=0,tInt=null,tLimit=0;
+function fmt(s){const neg=s<0;s=Math.abs(Math.round(s));return (neg?'+':'')+Math.floor(s/60)+':'+String(s%60).padStart(2,'0')}
+function tick(){const el=(tAcc+(tStart?(Date.now()-tStart)/1000:0));const left=tLimit-el;$('tclock').textContent=left>=0?fmt(left):'Over by '+fmt(-left).slice(1);$('tclock').classList.toggle('over',left<0)}
+function stopTimer(){if(tStart){tAcc+=(Date.now()-tStart)/1000;tStart=null}clearInterval(tInt);tInt=null;$('tgo').textContent='Start timer'}
+function resetTimer(){stopTimer();tAcc=0;tick()}
+$('tgo').onclick=()=>{if(tStart){stopTimer()}else{tStart=Date.now();tInt=setInterval(tick,500);$('tgo').textContent='Pause'}};
+$('treset').onclick=resetTimer;
+// ---------- question
+const SUPP=q=>q.supp?`<details style="margin-top:10px"><summary><strong>Supplementary sheet</strong></summary><img src="${q.supp}" alt="Supplementary sheet" style="margin-top:8px"></details>`:'';
+const IMG=q=>q.q?`<img src="${q.q}" alt="${esc(YR(q.year)+' '+q.label)}">`:'<p>This question was removed from the published paper for copyright reasons. Its marking instructions show what was assessed.</p>';
+const OCR={};
+let OCRB=null;function ocrFor(slug){OCRB=OCRB||fetch('ocr.json').then(r=>r.ok?r.json():{}).catch(()=>({}));return OCRB.then(b=>b[slug]||{})}
+function renderQ(q,slug,n){
+  const box=$('qbox');box.innerHTML=IMG(q)+SUPP(q);
+  ocrFor(slug).then(o=>{
+    const e=o[n];if(!e||!cur||String(cur.n)!==n||cur.slug!==slug)return;
+    let mode=e.inc||e.q.replace(/<[^>]*>/g,'').length<40?'img':'text';
+    const draw=()=>{
+      if(mode==='img')box.innerHTML=IMG(q)+SUPP(q);else box.innerHTML='<div class="qtext">'+e.q+'</div>'+SUPP(q);
+      const note=mode==='img'?(e.inc?'Some answer options are tables or diagrams, so the original image is shown first.':'Original paper image.'):e.fig?'Text read from the paper. Diagrams and graphs are not included: use the original image to see them.':'Text read from the paper by OCR. If anything looks wrong, check the original image.';
+      box.insertAdjacentHTML('beforeend','<div class="qtools"><button type="button" id="qtog">'+(mode==='img'?'Show text':'Show original image')+'</button><span>'+note+'</span></div>');
+      $('qtog').onclick=()=>{mode=mode==='img'?'text':'img';draw()};
+    };
+    draw();
+  });
+}
+function show(){
+  const x=seq[pos],q=TOPICS[x.slug][x.n];cur={...x,q};
+  const t=INDEX.find(z=>z.slug===x.slug);
+  $('tname').textContent=t.name;$('paper').textContent=`Advanced Higher Biology ${YR(q.year)} paper`;
+  $('qnum').textContent=q.label+(q.parts?' · parts '+q.parts:'');$('kind').textContent=q.kind;
+  $('pos').textContent=quizMode?`Quiz ${pos+1} of ${seq.length}`:`${pos+1} of ${seq.length}`;
+  renderQ(q,x.slug,String(x.n));
+  $('abox').hidden=true;setReport(q);
+  const m=q.marks||0;tLimit=m?m*90:0;$('tsug').textContent=m?`Suggested time ${fmt(tLimit)} (1 mark × 1.5 minutes)`:'Allow about 1.5 minutes per mark';resetTimer();tStart=Date.now();tInt=setInterval(tick,500);$('tgo').textContent='Pause';
+  $('toggle').textContent='Show marking instructions';
+  $('prev').disabled=pos===0;$('next').disabled=pos===seq.length-1&&!quizMode;
+  $('next').textContent=quizMode&&pos===seq.length-1?'Finish quiz':'Next';
+  $('rand').hidden=!!quizMode;
+  // MC
+  const mc=q.kind==='Multiple choice';$('mcbox').hidden=!mc;$('mcres').textContent='';
+  $('mcopts').innerHTML=mc?['A','B','C','D'].map(l=>`<button data-l="${l}">${l}</button>`).join(''):'';
+  document.querySelectorAll('#mcopts button').forEach(b=>b.onclick=()=>answerMC(b.dataset.l));
+  $('ratebox').hidden=true;markRate();
+  $('addSet').hidden=!(teacher&&S.setMode);$('addSet').textContent=inSet(x.slug,x.n)?'Remove from set':'Add to set';
+}
+function answerMC(l){
+  if(cur.answered)return;cur.answered=true;
+  const ok=l===cur.q.ans;
+  document.querySelectorAll('#mcopts button').forEach(b=>{b.disabled=true;if(b.dataset.l===cur.q.ans)b.classList.add('right');else if(b.dataset.l===l)b.classList.add('wrong')});
+  $('mcres').textContent=ok?'Correct!':`Not quite: the answer is ${cur.q.ans}.`;
+  rate(ok?'got':'not');if(quizMode)quizScore[pos]=ok;
+  reveal(true);
+}
+function upgradeMS(){
+  const w=$('abox').querySelector('.msw');if(!w)return;
+  const orig=w.innerHTML,KEY=String(cur.n),SLUG=cur.slug;
+  ocrFor(SLUG).then(o=>{const e=o[KEY];if(!e||!e.ms||!w.isConnected)return;let m=e.msfig?'img':'text';
+    const draw=()=>{w.innerHTML=(m==='text'?'<div class="mstw">'+e.ms+'</div>':orig)+'<div class="qtools"><button type="button" class="mtog">'+(m==='text'?'Show original image':'Show text')+'</button><span>'+(m==='text'?(e.msfig?'Text read by OCR. Tables, ticks and diagrams inside the marking instructions are not reproduced: use the original image.':'Marking instructions read from the paper by OCR. Check the original image if anything looks wrong.'):(e.msfig?'This marking scheme contains a table or diagram, so the original image is shown first.':'Original paper image.'))+'</span></div>';
+      if(typeof hydrate==='function')hydrate(w);w.querySelector('.mtog').onclick=()=>{m=m==='text'?'img':'text';draw()}};
+    draw()});
+}
+function answerHTML(){
+  const q=cur.q;let h='';
+  if(q.ans){h+=`<div class="ans"><div class="lbl">SQA answer</div><div class="big">${q.ans}</div></div>`}
+  if(q.ms){h+=`<div class="ans"><div class="lbl">SQA marking instructions</div><div class="sheet msw" style="margin-top:8px"><img src="${q.ms}" alt="Marking instructions"></div></div>`}
+  if(q.oe){h+=`<div class="ans"><div class="lbl">Suggested points (by Claude, not SQA)</div><strong>${esc(q.oe.title)}</strong>${q.oe.groups.map(([g,its])=>`<h4>${esc(g)}</h4><ul>${its.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`).join('')}<p class="note">Open-ended questions are marked holistically out of 3; these are ideas, not a checklist.</p></div>`}
+  if(q.cur){h+=q.cur.map(c=>`<div class="ans"><div class="lbl">Current data booklet answer · ${esc(c.q)}</div><ul>${c.lines.map(l=>l.startsWith('B:')?`<li><strong>${esc(l.slice(2))}</strong></li>`:`<li>${esc(l)}</li>`).join('')}</ul><p class="note">The data booklet changed in 2021; recalculated by Claude.</p></div>`).join('')}
+  return h;
+}
+function reveal(on){
+  if(on){stopTimer();$('abox').innerHTML=answerHTML();upgradeMS();$('abox').hidden=false;$('toggle').textContent='Back to question';$('ratebox').hidden=cur.q.kind==='Multiple choice';$('abox').scrollIntoView({behavior:'smooth',block:'start'})}
+  else{$('abox').hidden=true;$('ratebox').hidden=true;$('toggle').textContent='Show marking instructions';$('qbox').scrollIntoView({block:'start'})}
+}
+$('toggle').onclick=()=>reveal($('abox').hidden);
+function markRate(){const r=S.r[qid(cur.slug,cur.q)];document.querySelectorAll('#ratebox button').forEach(b=>b.classList.toggle('sel',b.dataset.r===r))}
+function rate(r){S.r[qid(cur.slug,cur.q)]=r;save();markRate();syncRemote()}
+document.querySelectorAll('#ratebox button').forEach(b=>b.onclick=()=>rate(b.dataset.r));
+$('next').onclick=()=>{if(pos<seq.length-1){pos++;show()}else if(quizMode)finishQuiz()};
+$('prev').onclick=()=>{if(pos>0){pos--;show()}};
+$('rand').onclick=()=>{pos=pickWeighted(seq);show()};
+$('back').onclick=()=>{if(back==='menu'&&menuSlug)openTopic(menuSlug,menuSub);else if(back==='mix')view('mix');else if(back==='teach')openTeach();else{renderHome();view('home')}};
+$('home2').onclick=$('mback').onclick=$('xback').onclick=$('shome').onclick=$('tback').onclick=()=>{renderHome();view('home')};
+function finishQuiz(){
+  const n=seq.length,ok=quizScore.filter(Boolean).length;
+  $('sscore').textContent=`${ok} / ${n}`;
+  $('slist').innerHTML=seq.map((x,k)=>{const q=TOPICS[x.slug][x.n];return `${YR(q.year)} ${esc(q.label)}: ${quizScore[k]===true?'✓':quizScore[k]===false?'✗':'not answered'}`}).join('<br>');
+  view('summary');
+}
+$('sagain').onclick=()=>{const kinds=quizMode==='mixquiz'?null:'Multiple choice';if(back==='menu'&&menuSlug){const A=TOPICS[menuSlug];const L=A.map((q,n)=>({slug:menuSlug,n})).filter(x=>A[x.n].kind==='Multiple choice'&&passes(menuSlug,A[x.n]));startSeq(sample(L,10),0,'menu','quiz')}else{view('mix')}};
+// ---------- filters
+document.querySelectorAll('input[name=course]').forEach(r=>r.onchange=()=>{S.course=r.value;save()});
+$('hideGot').onchange=e=>{S.hideGot=e.target.checked;save()};
+const PAPERS=[['white','White','#ffffff'],['cream','Cream','#f6eed3'],['pink','Pink','#f7d3dc'],['yellow','Yellow','#fbf1a3'],['green','Green','#d3ecc8'],['purple','Purple','#e0d4ee'],['blue','Blue','#cfe4f5'],['orange','Orange','#fbd7ad']];
+function drawCol(){const p=PAPERS.find(x=>x[0]===S.paper)||PAPERS[0];
+  document.documentElement.style.setProperty('--paper',p[2]);document.body.classList.toggle('dim',!!S.dim);
+  document.querySelector('#colBtn .dotc').style.background=p[2];
+  $('colSw').innerHTML=PAPERS.map(([id,n,c])=>`<button type="button" data-p="${id}" aria-pressed="${id===p[0]}" style="--c:${c}"><i aria-hidden="true"></i>${n}</button>`).join('');
+  $('colDim').checked=!!S.dim}
+$('colSw').addEventListener('click',e=>{const b=e.target.closest('[data-p]');if(!b)return;S.paper=b.dataset.p;save();drawCol()});
+$('colDim').onchange=e=>{S.dim=e.target.checked;save();drawCol()};
+$('colBtn').onclick=()=>{const open=$('colPop').hidden;$('colPop').hidden=!open;$('colBtn').setAttribute('aria-expanded',open)};
+document.addEventListener('click',e=>{if(!$('colPop').hidden&&!e.target.closest('#colPop,#colBtn')){$('colPop').hidden=true;$('colBtn').setAttribute('aria-expanded','false')}});
+function coveredIdx(t){const ok=new Set();(t.subs||[]).forEach((sb,i)=>{if(S.cov.includes(t.slug+':'+i))sb.n.forEach(n=>ok.add(n))});return ok}
+function drawCov(){
+  const byU={};INDEX.forEach(t=>(byU[t.unit]=byU[t.unit]||[]).push(t));
+  $('covList').innerHTML=Object.entries(byU).map(([u,ts])=>`<section class="unit" style="margin-top:12px"><h2>${esc(u)}</h2>${ts.map(t=>`<div class="ka"><h3>${esc(t.name)}</h3><div class="tlist">${(t.subs||[]).map((sb,i)=>`<label class="filters"><input type="checkbox" class="cv" value="${t.slug}:${i}" ${S.cov.includes(t.slug+':'+i)?'checked':''}> ${esc(sb.name)}</label>`).join('')}</div></div>`).join('')}</section>`).join('');
+  document.querySelectorAll('.cv').forEach(c=>c.onchange=()=>{S.cov=[...document.querySelectorAll('.cv:checked')].map(x=>x.value);save();covCount()});
+  $('covOnly').checked=S.covOnly;covCount()}
+function covCount(){const n=INDEX.reduce((a,t)=>a+(t.subs||[]).length,0);$('covCnt').textContent=`${S.cov.length} of ${n} ticked`}
+$('covOnly').onchange=e=>{S.covOnly=e.target.checked;save()};
+$('covAll').onclick=()=>{S.cov=INDEX.flatMap(t=>(t.subs||[]).map((s,i)=>t.slug+':'+i));save();drawCov()};
+$('covNone').onclick=()=>{S.cov=[];save();drawCov()};
+$('covQuiz').onclick=async()=>{
+  if(!S.cov.length){$('covMsg').textContent='Tick at least one covered topic first.';$('covBox').open=true;return}
+  $('covMsg').textContent='Loading…';const L=[],seen=new Set();
+  try{for(const t of INDEX){const ok=coveredIdx(t);if(!ok.size)continue;const A=await loadTopic(t.slug);
+    ok.forEach(n=>{const q=A[n];const key=q.year+q.kind+q.label;if(q.kind==='Multiple choice'&&passes(t.slug,q)&&!seen.has(key)){seen.add(key);L.push({slug:t.slug,n})}})}}
+  catch(e){$('covMsg').textContent='Could not load the questions. Try again.';return}
+  if(!L.length){$('covMsg').textContent='No multiple choice questions match. Check your colour and paper settings.';return}
+  $('covMsg').textContent='';startSeq(sample(L,10),0,'home','quiz');
+};
+// ---------- mixed
+function renderMix(){
+  $('xtopics').innerHTML=INDEX.map(t=>`<label class="filters"><input type="checkbox" value="${t.slug}" class="xt"> ${esc(t.name)}</label>`).join('');
+  const units=[...new Set(INDEX.map(t=>t.unit))];
+  $('xunits').innerHTML=units.map(u=>`<button class="b" data-u="${esc(u)}">${esc(u)}</button>`).join('');
+  document.querySelectorAll('#xunits button').forEach(b=>b.onclick=()=>document.querySelectorAll('.xt').forEach(c=>c.checked=INDEX.find(t=>t.slug===c.value).unit===b.dataset.u));
+  view('mix');
+}
+$('mixBtn').onclick=renderMix;
+$('xall').onclick=()=>document.querySelectorAll('.xt').forEach(c=>c.checked=true);
+$('xnone').onclick=()=>document.querySelectorAll('.xt').forEach(c=>c.checked=false);
+$('xstart').onclick=async()=>{
+  const slugs=[...document.querySelectorAll('.xt:checked')].map(c=>c.value);
+  if(!slugs.length){$('xmsg').textContent='Choose at least one topic.';return}
+  $('xmsg').textContent='Loading…';
+  try{for(const s of slugs)await loadTopic(s)}catch(e){$('xmsg').textContent='Could not load the topics. Try again.';return}
+  const k=document.querySelector('input[name=xkind]:checked').value;
+  const seen=new Set(),L=[];
+  slugs.forEach(s=>TOPICS[s].forEach((q,n)=>{if((k==='all'||q.kind===k)&&passes(s,q)){const key=q.year+q.kind+q.label;if(!seen.has(key)){seen.add(key);L.push({slug:s,n})}}}));
+  if(!L.length){$('xmsg').textContent='No questions match these settings.';return}
+  $('xmsg').textContent='';
+  startSeq(sample(L,+$('xn').value),0,'mix',k==='Multiple choice'?'quiz':null);
+};
+// ---------- sets
+function inSet(slug,n){return S.set.some(x=>x.slug===slug&&x.n===n)}
+$('addSet').onclick=()=>{const x=seq[pos];if(inSet(x.slug,x.n))S.set=S.set.filter(y=>!(y.slug===x.slug&&y.n===x.n));else S.set.push({slug:x.slug,n:x.n});save();show()};
+function setToken(L){return 'set-'+L.map(x=>INDEX.findIndex(t=>t.slug===x.slug).toString(36)+'.'+x.n.toString(36)).join('_')}
+function parseToken(tok){if(!tok.startsWith('set-'))return null;return tok.slice(4).split('_').map(p=>{const [a,b]=p.split('.');const t=INDEX[parseInt(a,36)];return t?{slug:t.slug,n:parseInt(b,36)}:null}).filter(Boolean)}
+async function renderSet(){
+  for(const x of S.set)await loadTopic(x.slug);
+  $('setList').innerHTML=S.set.length?S.set.map((x,k)=>{const q=TOPICS[x.slug][x.n];return `${k+1}. ${YR(q.year)} ${esc(q.label)} <span class="cnt">(${esc(INDEX.find(t=>t.slug===x.slug).name)})</span>`}).join('<br>'):'No questions in the set yet.';
+  $('setLink').value=S.set.length?SITE+'#'+setToken(S.set):'';
+}
+$('copyLink').onclick=async()=>{const v=$('setLink').value;if(!v)return;try{await navigator.clipboard.writeText(v);$('setMsg').textContent='Link copied.'}catch(e){$('setLink').select();$('setMsg').textContent='Press Ctrl+C to copy the selected link.'}};
+$('clearSet').onclick=()=>{S.set=[];save();renderSet()};
+$('setMode').onchange=e=>{S.setMode=e.target.checked;save()};
+async function openSetFromHash(){
+  const L=parseToken(location.hash.slice(1));if(!L||!L.length)return;
+  try{for(const x of L)await loadTopic(x.slug)}catch(e){return}
+  const ok=L.filter(x=>TOPICS[x.slug][x.n]);
+  $('setBanner').hidden=false;$('setBanner').innerHTML=`<strong>Question set from your teacher</strong> · ${ok.length} questions <button class="b pri" id="setGo" style="margin-left:8px">Start</button>`;
+  $('setGo').onclick=()=>startSeq(ok,0,'home',null);
+}
+// ---------- PDF / print
+async function imgToJpeg(src){return new Promise((res,rej)=>{const im=new Image();im.onload=()=>{const c=document.createElement('canvas');c.width=im.width;c.height=im.height;const g=c.getContext('2d');g.fillStyle='#fff';g.fillRect(0,0,c.width,c.height);g.drawImage(im,0,0);res({d:c.toDataURL('image/jpeg',0.9),w:im.width,h:im.height})};im.onerror=rej;im.src=src})}
+async function makePdf(withAns){
+  if(!S.set.length){$('setMsg').textContent='Add questions to the set first.';return}
+  const dl=window.claude?await claude.use('downloads'):null;
+  if(!window.jspdf||!dl){ // offline or no download: print view
+    $('printArea').innerHTML=S.set.map((x,k)=>{const q=TOPICS[x.slug][x.n];return `<div class="pq"><h3>${k+1}. AH Biology ${YR(q.year)} · ${esc(q.label)}</h3>${q.q?`<img src="${q.q}" style="max-width:100%">`:''}</div>`}).join('')+(withAns?'<h2 style="break-before:page">Answers</h2>'+S.set.map((x,k)=>{const q=TOPICS[x.slug][x.n];return `<div class="pq"><h3>${k+1}. ${YR(q.year)} ${esc(q.label)}</h3>${q.ans?`<p>Answer: <b>${q.ans}</b></p>`:''}${q.ms?`<img src="${q.ms}" style="max-width:100%">`:''}</div>`}).join(''):'');
+    document.querySelectorAll('.wrap,#drawer').forEach(e=>e.classList.add('noprint'));$('printArea').hidden=false;window.print();$('printArea').hidden=true;document.querySelector('.wrap').classList.remove('noprint');return;
+  }
+  $('setMsg').textContent='Building PDF…';
+  const {jsPDF}=window.jspdf;const doc=new jsPDF({unit:'pt',format:'a4'});const W=595,H=842,M=36;let y=M;
+  const head=t=>{doc.setFont('helvetica','bold');doc.setFontSize(11);if(y>H-80){doc.addPage();y=M}doc.text(t,M,y+10);y+=20};
+  const put=async src=>{const im=await imgToJpeg(src);let w=W-2*M,h=im.h*w/im.w;if(h>H-2*M){h=H-2*M;w=im.w*h/im.h}if(y+h>H-M){doc.addPage();y=M}doc.addImage(im.d,'JPEG',M,y,w,h);y+=h+14};
+  doc.setFontSize(16);doc.setFont('helvetica','bold');doc.text('Advanced Higher Biology past paper questions',M,y+12);y+=24;doc.setFontSize(9);doc.setFont('helvetica','normal');doc.text('© SQA/Qualifications Scotland. Compiled by Mr Wilson, Greenwood Academy with Claude (Anthropic AI).',M,y);y+=18;
+  for(let k=0;k<S.set.length;k++){const x=S.set[k],q=TOPICS[x.slug][x.n];head(`${k+1}. AH Biology ${YR(q.year)} - ${q.kind} ${q.label}${q.parts?' (parts '+q.parts+')':''}`);if(q.q)await put(q.q)}
+  if(withAns){doc.addPage();y=M;doc.setFontSize(14);doc.setFont('helvetica','bold');doc.text('Answers',M,y+12);y+=26;
+    for(let k=0;k<S.set.length;k++){const x=S.set[k],q=TOPICS[x.slug][x.n];head(`${k+1}. ${YR(q.year)} - ${q.label}`);
+      if(q.ans){doc.setFont('helvetica','normal');doc.setFontSize(10);const lines=doc.splitTextToSize(`Answer ${q.ans}.`,W-2*M);doc.text(lines,M,y+8);y+=lines.length*12+10}
+      if(q.ms)await put(q.ms)}}
+  const blob=doc.output('blob');
+  try{await dl.save({filename:withAns?'question-set-with-answers.pdf':'question-set.pdf',data:blob});$('setMsg').textContent='PDF ready.'}catch(e){$('setMsg').textContent='The download was not saved.'}
+}
+$('pdfQ').onclick=()=>makePdf(false);$('pdfQA').onclick=()=>makePdf(true);
+// ---------- remote (class tracking + reports)
+function syncRemote(){}
+// Problem reports go to Mr Wilson's Microsoft Form.
+// To prefill: in Forms use ··· > Get pre-filled URL, enter HIGHER / 2099 / QNUM, and paste the link into FORM_PREFILL.
+const FORM_URL='https://forms.cloud.microsoft/e/6s21bbcSFP';
+const FORM_PREFILL='';
+function setReport(q){
+  const qn=q.label.replace(/^Question\s*/,'');
+  const a=$('repLink');
+  a.href=FORM_PREFILL?FORM_PREFILL.replace('HIGHER',encodeURIComponent('Advanced Higher')).replace('2099',encodeURIComponent(YR(q.year))).replace('QNUM',encodeURIComponent(qn)):FORM_URL;
+  $('repInfo').textContent=FORM_PREFILL?'':`For the form: Level Advanced Higher · Year ${YR(q.year)} · Question ${qn}`;
+  const tn=(INDEX.find(t=>cur&&t.slug===cur.slug)||{}).name||'';
+  repCode=`AH Biology | ${YR(q.year)} | Question ${qn}${tn?' | '+tn:''}`;
+}
+let repCode='';
+$('repCopy').onclick=async()=>{let ok=false;try{await navigator.clipboard.writeText(repCode);ok=true}catch(e){try{const t=document.createElement('textarea');t.value=repCode;document.body.appendChild(t);t.select();ok=document.execCommand('copy');t.remove()}catch(e2){}}
+  $('repInfo').textContent=ok?'Copied: '+repCode+' (paste it into the form)':'Copy this into the form: '+repCode};
+async function openTeach(){
+  $('setMode').checked=S.setMode;await renderSet();view('teach');
+}
+$('teachBtn').onclick=openTeach;
+// ---------- progress code
+const R2B={got:1,part:2,not:3},B2R=[null,'got','part','not'];
+function b64u(bytes){let b='';bytes.forEach(x=>b+=String.fromCharCode(x));return btoa(b).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')}
+function ub64(str){str=str.replace(/-/g,'+').replace(/_/g,'/');while(str.length%4)str+='=';const b=atob(str);return Uint8Array.from(b,c=>c.charCodeAt(0))}
+function makeCode(){
+  const vals=[];INDEX.forEach(t=>t.ids.forEach(id=>vals.push(R2B[S.r[t.slug+'|'+id]]||0)));INDEX.forEach(t=>(t.ids2||[]).forEach(id=>vals.push(R2B[S.r[t.slug+'|'+id]]||0)));
+  const bytes=new Uint8Array(Math.ceil(vals.length/4));vals.forEach((v,k)=>bytes[k>>2]|=v<<((k&3)*2));
+  let end=bytes.length;while(end>0&&bytes[end-1]===0)end--;
+  const out=[];for(let k=0;k<end;){if(bytes[k]===0){let r=0;while(k<end&&bytes[k]===0&&r<255){r++;k++}out.push(0,r)}else out.push(bytes[k++])}
+  return 'AB1-'+b64u(Uint8Array.from(out));
+}
+function loadCode(code){
+  code=code.trim().replace(/\s+/g,'');const ver=code.slice(0,4);if(ver!=='AB1-')throw new Error('format');
+  let bytes=ub64(code.slice(4));
+  if(ver==='AB1-'){const o=[];for(let k=0;k<bytes.length;k++){if(bytes[k]===0){const r=bytes[++k];for(let j=0;j<r;j++)o.push(0)}else o.push(bytes[k])}bytes=Uint8Array.from(o)}let k=0,n=0;
+  INDEX.forEach(t=>t.ids.forEach(id=>{const v=k>>2<bytes.length?(bytes[k>>2]>>((k&3)*2))&3:0;if(v){S.r[t.slug+'|'+id]=B2R[v];n++}k++}));INDEX.forEach(t=>(t.ids2||[]).forEach(id=>{const v=k>>2<bytes.length?(bytes[k>>2]>>((k&3)*2))&3:0;if(v){S.r[t.slug+'|'+id]=B2R[v];n++}k++}));
+  save();return n;
+}
+$('mkCode').onclick=()=>{const c=makeCode();$('myCode').value=c;$('myCode').hidden=false;$('cpCode').hidden=false;$('codeMsg').textContent=Object.keys(S.r).length?'':'You have no progress saved yet.'};
+$('cpCode').onclick=async()=>{try{await navigator.clipboard.writeText($('myCode').value);$('codeMsg').textContent='Code copied.'}catch(e){$('myCode').select();$('codeMsg').textContent='Select the code and copy it.'}};
+$('tabT').onclick=()=>{S.tab='topics';save();renderHome()};$('tabS').onclick=()=>{S.tab='subs';save();renderHome()};
+$('ldCode').onclick=()=>{try{const n=loadCode($('inCode').value);$('ldMsg').textContent=`Loaded ${n} question rating${n===1?'':'s'}.`;$('inCode').value='';renderHome()}catch(e){$('ldMsg').textContent='That code did not work. Check it starts with AB1- and was copied in full.'}};
+$('rsBtn').onclick=()=>{$('rsConfirm').hidden=false;$('rsBtn').hidden=true;$('rsMsg').textContent=''};
+$('rsNo').onclick=()=>{$('rsConfirm').hidden=true;$('rsBtn').hidden=false};
+$('rsYes').onclick=()=>{S.r={};save();renderHome();$('rsConfirm').hidden=true;$('rsBtn').hidden=false;$('rsMsg').textContent='Progress reset.'};
+// ---------- init
+async function init(){
+  try{INDEX=window.INDEX_DATA||await (await fetch('index.json')).json()}catch(e){$('units').textContent='Could not load the topic list. Reload the page to try again.';return}
+  renderHome();drawCol();drawCov();openSetFromHash();
+  if(window.claude){
+    claude.use('user').then(async u=>{USER=u;if(!u)return;try{teacher=await u.isOwner()}catch(e){}$('teachBtn').hidden=!teacher;try{UID=await u.id()}catch(e){}
+      DB=await claude.use('db');});
+  }
+  if(!window.claude){$('teachBtn').hidden=false;teacher=true} // offline copy: teacher tools for set building and printing
+}
+const EXAM=Date.UTC(2027,4,12,8,0,0);
+function cdTick(){let d=Math.max(0,Math.floor((EXAM-Date.now())/1000));
+  if(d===0){$('cdt').textContent='Good luck!';return}
+  const p=[[Math.floor(d/86400),'days'],[Math.floor(d%86400/3600),'hours'],[Math.floor(d%3600/60),'mins'],[d%60,'secs']];
+  $('cdt').innerHTML=p.map(([v,l])=>`<span>${String(v).padStart(l==='days'?1:2,'0')}<small>${l}</small></span>`).join('')}
+
+cdTick();setInterval(cdTick,1000);
+init();
+</script>
+
+
+
+
+</body></html>
